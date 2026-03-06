@@ -9,7 +9,28 @@ const instance = axios.create({
 });
 
 // interceptores del cliente
+instance.interceptors.request.use((config) =>{
+    const token = localStorage.getItem("access_token");
+    if(token){
+        config.headers.Authorization = `Bearer ${token}`
+    }
+
+    return config;
+});
+
 
 // interceptores del Servidor
+instance.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if(error.response?.status === 401){
+            localStorage.removeItem("access_token");
+            location.href = "/auth/login"
+        }
+        return Promise.reject(error);
+    }
+)
 
 export default instance;
