@@ -16,12 +16,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { loginLaravel, loginNest } from './../../services/auth.service'
 
 
 const credenciales = ref({email: "", password: ""});
 
-function funIngresar(){
-
+async function funIngresar(){
+    const respuesta = await loginLaravel(credenciales.value.email, credenciales.value.password);
+    console.log(respuesta);
 }
 
 
