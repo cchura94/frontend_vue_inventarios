@@ -4,6 +4,7 @@ import Nosotros from "../views/web/Nosotros.vue";
 import Servicios from "../views/web/Servicios.vue";
 import Login from "../views/auth/Login.vue";
 import Perfil from "../views/admin/Perfil.vue";
+import Users from "../views/admin/users/Users.vue";
 
 const routes: Array<RouteRecordRaw>  = [
     {
@@ -14,8 +15,12 @@ const routes: Array<RouteRecordRaw>  = [
     { path: '/servicios', component: Servicios },
     { path: '/auth/login', component: Login, name: 'Login', meta: {redirectIfAuth: true} },
     {
-        path: '/admin/perfil', component: Perfil, name: 'Perfil', meta: {requireAuth: true}
-    }
+        path: '/admin/perfil', component: Perfil, name: 'Perfil', meta: {requireAuth: true},
+    },
+    {
+        path: '/admin/users', component: Users, name: 'Users', meta: {requireAuth: true},
+    },
+    
 ];
 
 const router = createRouter({

@@ -6,6 +6,12 @@ const BASE_URL_API = `${BASE_URL}/api`;
 
 const instance = axios.create({
     baseURL: BASE_URL_API,
+    /*
+    headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+    }
+    */
 });
 
 // interceptores del cliente
