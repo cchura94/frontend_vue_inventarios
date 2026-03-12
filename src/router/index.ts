@@ -5,6 +5,8 @@ import Servicios from "../views/web/Servicios.vue";
 import Login from "../views/auth/Login.vue";
 import Perfil from "../views/admin/Perfil.vue";
 import Users from "../views/admin/users/Users.vue";
+import AppLayout from "../layout/AppLayout.vue";
+
 
 const routes: Array<RouteRecordRaw>  = [
     {
@@ -14,12 +16,20 @@ const routes: Array<RouteRecordRaw>  = [
     { path: '/acerca-de-nosotros', component: Nosotros },
     { path: '/servicios', component: Servicios },
     { path: '/auth/login', component: Login, name: 'Login', meta: {redirectIfAuth: true} },
+    
     {
-        path: '/admin/perfil', component: Perfil, name: 'Perfil', meta: {requireAuth: true},
-    },
-    {
-        path: '/admin/users', component: Users, name: 'Users', meta: {requireAuth: true},
-    },
+        path: '/admin',
+        component: AppLayout,
+        children: [
+            {
+                path: 'perfil', component: Perfil, name: 'Perfil', meta: {requireAuth: true},
+            },
+            {
+                path: 'users', component: Users, name: 'Users', meta: {requireAuth: true},
+            },
+        ]
+    }
+
     
 ];
 
