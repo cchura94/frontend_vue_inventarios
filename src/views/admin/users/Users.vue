@@ -1,6 +1,42 @@
 <template>
   <div class="card">
     <h1>Gestión de Usuarios</h1>
+
+    <Button label="Nuevo Usuario" @click="visible = true" />
+
+    <Dialog v-model:visible="visible" modal header="Editar Usuario" :style="{ width: '25rem' }">
+        <span class="text-surface-500 dark:text-surface-400 block mb-8">Actualiza los datos.</span>
+        <div class="flex items-center gap-4 mb-4">
+            <label for="name" class="font-semibold w-24">Nombre</label>
+            <InputText id="name" class="flex-auto" autocomplete="off" v-model="user.name" />
+        </div>
+        <div class="flex items-center gap-4 mb-8">
+            <label for="email" class="font-semibold w-24">Correo</label>
+            <InputText id="email" class="flex-auto" autocomplete="off" v-model="user.email" />
+        </div>
+        <div class="flex items-center gap-4 mb-8">
+            <label for="password" class="font-semibold w-24">Contraseña</label>
+            <Password id="password" class="flex-auto" :feedback="false" v-model="user.password" />
+        </div>
+        <div class="flex justify-end gap-2">
+            <Button type="button" label="Cancelar" severity="secondary" @click="visible = false"></Button>
+            <Button type="button" label="Guardar Cambios" @click="funGuardarUsuario()"></Button>
+        </div>
+    </Dialog>
+
+
+    <DataTable :value="users" tableStyle="min-width: 50rem">
+        <Column field="id" header="ID"></Column>
+        <Column field="name" header="Name"></Column>
+        <Column field="email" header="Correo"></Column>
+        <Column :exportable="false" style="min-width: 12rem">
+            <template #body="slotProps">
+                <Button icon="pi pi-pencil" rounded class="mr-2" @click="funEditarUser(slotProps.data)"  />
+                <Button icon="pi pi-trash" variant="outlined" rounded severity="danger"  />
+            </template>
+        </Column>
+    </DataTable>
+
     <div>
       <label for="nom">Ingrese Nombre:</label>
       <input type="text" v-model="user.name" />
@@ -46,6 +82,8 @@ const userDataBlank = { name: "", email: "", password: "" };
 const users = ref<UserInterface[]>([]);
 const user = ref<UserInterface>({ ...userDataBlank });
 
+  const visible = ref<boolean>(false)
+
 onMounted(() => {
   funListarUsuarios();
 });
@@ -66,6 +104,7 @@ async function funGuardarUsuario() {
       funListarUsuarios();
     }
     user.value = { ...userDataBlank };
+    visible.value = false;
   } catch (error) {
     console.log(error);
   }
@@ -73,5 +112,6 @@ async function funGuardarUsuario() {
 
 function funEditarUser(dataUser: UserInterface) {
   user.value = dataUser;
+  visible.value = true;
 }
 </script>

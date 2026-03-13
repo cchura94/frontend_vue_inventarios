@@ -6,17 +6,23 @@ import Login from "../views/auth/Login.vue";
 import Perfil from "../views/admin/Perfil.vue";
 import Users from "../views/admin/users/Users.vue";
 import AppLayout from "../layout/AppLayout.vue";
+import WebLayout from "../components/WebLayout.vue";
 
 
 const routes: Array<RouteRecordRaw>  = [
     {
         path: '/',
-        component: Inicio
-    },
-    { path: '/acerca-de-nosotros', component: Nosotros },
-    { path: '/servicios', component: Servicios },
-    { path: '/auth/login', component: Login, name: 'Login', meta: {redirectIfAuth: true} },
-    
+        component: WebLayout,
+        children: [
+            {
+                path: '/',
+                component: Inicio
+            },
+            { path: '/acerca-de-nosotros', component: Nosotros },
+            { path: '/servicios', component: Servicios },
+            { path: '/auth/login', component: Login, name: 'Login', meta: {redirectIfAuth: true} },
+        ]
+    },    
     {
         path: '/admin',
         component: AppLayout,

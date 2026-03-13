@@ -1,6 +1,6 @@
 <template>
 
-    <div class="min-h-screen bg-gray-100 flex items-center justify-center p-6">
+    <div class="bg-gray-100 flex items-center justify-center p-6">
         <div class="bg-white shadow-lg rounded-lg w-full max-w-xl p-6">
 
             <div class="flex items-center space-x-4">
@@ -26,7 +26,7 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-gray-500">Fecha Creación</span>
-                        <span class="font-medium">{{ perfil.createAt }}</span>
+                        <span class="font-medium">{{ perfil.created_at }}</span>
                     </div>
 
                 </div>
@@ -42,8 +42,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import {getProfile, funSalir} from "./../../services/auth.service"
+import type { UserInterface } from "../../types/UserInteface";
 
-const perfil = ref({});
+const perfil = ref<UserInterface>({email:"", name: ""});
 
 onMounted(() => {
     obtenerPerfil()
