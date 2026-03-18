@@ -30,6 +30,21 @@ const model = ref([
            
         ]
     },
+    {
+        label: 'Inventarios',
+        items: [
+            {
+                label: 'Categoria',
+                icon: 'pi pi-fw pi-box',
+                to: '/admin/categoria'
+            },
+            {
+                label: 'Producto',
+                icon: 'pi pi-fw pi-products',
+                to: '/admin/producto'
+            }
+        ]
+    },
 ]);
 </script>
 
