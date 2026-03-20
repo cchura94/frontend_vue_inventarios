@@ -17,6 +17,10 @@ export default {
     },
     eliminar(id: number){
         api.delete("/producto/"+id);
+    },
+    actualizarImagenProducto(id: number, formData: FormData){
+        return api.post(`/producto/${id}/actualiza-imagen`, formData);
+
     }
 
 }
