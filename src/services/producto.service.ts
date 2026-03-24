@@ -4,7 +4,7 @@ import type { CategoriaInterface } from "../types/CategoriaInteface";
 export default {
 
     listar(page=1, limit=10, buscar=""){
-        return api.get(`/producto?page=${page}&limit=${limit}&q=${buscar}`);
+        return api.get(`/producto?page=${page}&limit=${limit}&search=${buscar}`);
     },
     guardar(data: CategoriaInterface){
         return api.post("/producto", data);

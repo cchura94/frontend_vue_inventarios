@@ -143,11 +143,18 @@ onMounted(() => {
 });
 
 async function funListaProductos(){
-    const {data} = await productoService.listar(lazyParams.value.page + 1, lazyParams.value.rows, buscar.value);
-    console.log("DATA: ", data);
-    productos.value = data.data;
-    totalRecords.value = data.total
-    cargando.value = false
+    try {
+        cargando.value = true;
+        
+        const {data} = await productoService.listar(lazyParams.value.page + 1, lazyParams.value.rows, buscar.value);
+        console.log("DATA: ", data);
+        productos.value = data.data;
+        totalRecords.value = data.total
+        cargando.value = false
+        
+    } catch (error) {
+        cargando.value = false
+    }
 
 }
 
