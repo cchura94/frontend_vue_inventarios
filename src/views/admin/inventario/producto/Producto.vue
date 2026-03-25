@@ -2,7 +2,7 @@
     
     <div>
         <div class="card">
-
+            {{ miContador.cont }}
             <Toolbar class="mb-6">
                 <template #start>
                     <Button label="Nuevo Producto" icon="pi pi-plus" class="mr-2" @click="abrirNuevo" />
@@ -116,7 +116,10 @@ import productoService from '../../../../services/producto.service';
 import categoriaService from '../../../../services/categoria.service';
 import type { CategoriaInterface } from '../../../../types/CategoriaInteface';
 import { BASE_URL } from '../../../../services/api';
+import { useContadorStore } from './../../../../stores/contador'
 
+
+const miContador = useContadorStore();
 
 const productos = ref<any[]>([]);
 

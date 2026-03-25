@@ -8,12 +8,17 @@ import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
+import { createPinia } from 'pinia';
+const pinia = createPinia()
+
+
 import '@/assets/tailwind.css';
 import '@/assets/styles.scss';
 
 
 const app = createApp(App);
 app.use(router) // habilitando rutas
+app.use(pinia)
 
 app.use(PrimeVue, {
     theme: {

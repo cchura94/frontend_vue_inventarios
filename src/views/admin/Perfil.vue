@@ -6,9 +6,11 @@
             <div class="flex items-center space-x-4">
                 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="" class="w-16 h-16 rounded-full border-2 border-blue-500">
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Juan Perez</h2>
+                    <h2 class="text-xl font-semibold text-gray-800"></h2>
                     <p>
-                        ADMIN
+                        ADMIN -  {{ miContador.cont }}
+                        <button @click="miContador.cont++">+</button>
+                        <button @click="miContador.cont--">-</button>
 
                     </p>
 
@@ -40,9 +42,13 @@
 </template>
 
 <script setup lang="ts">
+import { useContadorStore } from './../../stores/contador.js'
+
 import { onMounted, ref } from "vue";
 import {getProfile, funSalir} from "./../../services/auth.service"
 import type { UserInterface } from "../../types/UserInteface";
+
+const miContador = useContadorStore();
 
 const perfil = ref<UserInterface>({email:"", name: ""});
 
