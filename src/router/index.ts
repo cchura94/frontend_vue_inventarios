@@ -9,6 +9,8 @@ import AppLayout from "../layout/AppLayout.vue";
 import WebLayout from "../components/WebLayout.vue";
 import Categoria from "../views/admin/inventario/categoria/Categoria.vue";
 import Producto from "../views/admin/inventario/producto/Producto.vue";
+import Sucursal from "../views/admin/inventario/Sucursal/Sucursal.vue";
+import Almacen from "../views/admin/inventario/almacen/Almacen.vue";
 
 
 const routes: Array<RouteRecordRaw>  = [
@@ -40,6 +42,12 @@ const routes: Array<RouteRecordRaw>  = [
             },
             {
                 path: 'producto', component: Producto, name: 'Producto', meta: {requireAuth: true},
+            },
+            {
+                path: 'sucursal', component: Sucursal, name: 'Sucursal', meta: {requireAuth: true},
+            },
+            {
+                path: 'almacen', component: Almacen, name: 'Almacen', meta: {requireAuth: true},
             },
         ]
     }

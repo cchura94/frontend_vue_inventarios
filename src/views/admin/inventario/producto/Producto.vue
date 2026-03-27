@@ -6,6 +6,10 @@
             <Toolbar class="mb-6">
                 <template #start>
                     <Button label="Nuevo Producto" icon="pi pi-plus" class="mr-2" @click="abrirNuevo" />
+
+                    <Select v-model="selectedSucursal" :options="sucursales" optionLabel="nombre" optionValue="id" placeholder="Seleccionar Sucursal" class="w-full md:w-56" @change="funListarAlmacenes()" />
+                    <Select v-model="selectedAlmacen" :options="almacenes" optionLabel="nombre" optionValue="id" placeholder="Seleccionar Almacen" class="w-full md:w-56" @change="funListaProductos()" />
+
                 </template>
             
                 <template #end>
@@ -117,6 +121,10 @@ import categoriaService from '../../../../services/categoria.service';
 import type { CategoriaInterface } from '../../../../types/CategoriaInteface';
 import { BASE_URL } from '../../../../services/api';
 import { useContadorStore } from './../../../../stores/contador'
+import type { SucursalInterface } from '../../../../types/SucursalInteface';
+import sucursalService from '../../../../services/sucursal.service';
+import almacenService from '../../../../services/almacen.service';
+import type { AlmacenInterface } from '../../../../types/AlmacenInterface';
 
 
 const miContador = useContadorStore();
@@ -135,6 +143,11 @@ const categorias =ref<CategoriaInterface[]>([]);
 const visibleDialogImage = ref<boolean>(false);
 const imagenSeleccionada = ref()
 
+const selectedSucursal = ref(-1);
+const selectedAlmacen = ref(-1);
+const sucursales = ref<SucursalInterface[]>([]);
+const almacenes = ref<AlmacenInterface[]>([]);
+
 onMounted(() => {
     lazyParams.value = {
         page: 0,
@@ -143,13 +156,20 @@ onMounted(() => {
     }
     funListaProductos()
     funGetCategorias()
+    funListaSucursal()
 });
+
+async function funListaSucursal(){
+    const {data} = await sucursalService.index();
+
+    sucursales.value = data;
+}
 
 async function funListaProductos(){
     try {
         cargando.value = true;
         
-        const {data} = await productoService.listar(lazyParams.value.page + 1, lazyParams.value.rows, buscar.value);
+        const {data} = await productoService.listar(lazyParams.value.page + 1, lazyParams.value.rows, buscar.value, selectedAlmacen.value);
         console.log("DATA: ", data);
         productos.value = data.data;
         totalRecords.value = data.total
@@ -159,6 +179,11 @@ async function funListaProductos(){
         cargando.value = false
     }
 
+}
+
+async function funListarAlmacenes(){
+    const {data} = await almacenService.getBySucursal(selectedSucursal.value);
+    almacenes.value = data;
 }
 
 async function funGetCategorias(){

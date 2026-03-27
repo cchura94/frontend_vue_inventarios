@@ -40,8 +40,18 @@ const model = ref([
             },
             {
                 label: 'Producto',
-                icon: 'pi pi-fw pi-products',
+                icon: 'pi pi-fw pi-table',
                 to: '/admin/producto'
+            },
+            {
+                label: 'Sucursales',
+                icon: 'pi pi-fw pi-circle',
+                to: '/admin/sucursal'
+            },
+            {
+                label: 'Almacenes',
+                icon: 'pi pi-fw pi-circle',
+                to: '/admin/almacen'
             }
         ]
     },
