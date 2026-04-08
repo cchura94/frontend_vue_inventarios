@@ -55,6 +55,26 @@ const model = ref([
             }
         ]
     },
+    {
+        label: 'Compras & Ventas',
+        items: [
+            {
+                label: 'Nueva Compra',
+                icon: 'pi pi-fw pi-box',
+                to: '/admin/notas/nueva-compra'
+            },
+            {
+                label: 'Nueva Venta',
+                icon: 'pi pi-fw pi-table',
+                to: '/admin/notas/nueva-venta'
+            },
+            {
+                label: 'Lista de Compras y Ventas',
+                icon: 'pi pi-fw pi-circle',
+                to: '/admin/sucursal'
+            }
+        ]
+    },
 ]);
 </script>
 
