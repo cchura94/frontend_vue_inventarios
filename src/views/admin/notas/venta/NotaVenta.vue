@@ -78,7 +78,15 @@
         ></Column>
         <Column :exportable="false" style="min-width: 5rem">
           <template #body="slotProps">
+            <div class="productos">
+              <div>
+                <p v-if="getStock(slotProps.data)>0">Stock: {{getStock(slotProps.data)}}</p>
+                <p v-else>AGOTADO</p>
+  
+              </div>
+            </div>
             <Button
+              :disabled="getStock(slotProps.data) === 0"
               icon="pi pi-plus"
               rounded
               class="mr-2"
@@ -137,6 +145,11 @@
                 <span class="font-semibold text-gray-800">
                   Bs {{ slotProps.data.precio_venta * slotProps.data.cantidad }}
                 </span>
+              </template>
+            </Column>
+            <Column header="accion">
+              <template #body="slotProps">
+                <Button icon="pi pi-trash" severity="danger" @click="quitarCarrito(slotProps.data.id)"></Button>
               </template>
             </Column>
           </DataTable>
@@ -236,12 +249,15 @@
               severity="secondary"
               @click="visibleDialogCliente = false"
             />
-            <Button label="Save" @click="guardarClienteProveedor" />
+            <Button label="Guardar Cliente" @click="guardarClienteProveedor" />
           </div>
         </Dialog>
       </div>
       <div class="mb-6">
         <div class="bg-blue-500 text-white p-2">Generar Pedido</div>
+        
+        <Button label="Registrar Venta" @click="generarVenta" />
+
       </div>
     </div>
   </div>
@@ -258,6 +274,7 @@ import clienteProveedorService from "../../../../services/cliente.service";
 import { BASE_URL } from "../../../../services/api";
 import type { SucursalInterface } from "../../../../types/SucursalInteface";
 import type { AlmacenInterface } from "../../../../types/AlmacenInterface";
+import notaService from "../../../../services/nota.service";
 
 const productos = ref<any[]>([]);
 const carrito = ref<any[]>([]);
@@ -313,6 +330,16 @@ async function funListaProductos() {
   }
 }
 
+function getStock(producto: any){
+  // if(!producto.almacenes || producto.almacenes.length === 0) return 0;
+
+  console.log("CALCULANDO", producto.almacenes.length);
+  return producto.almacenes.reduce((total: number, almacen: any) => {
+    
+    return total + (almacen.pivot?.cantidad_actual || 0);
+  }, 0);
+}
+
 async function funListarAlmacenes() {
   const { data } = await almacenService.getBySucursal(selectedSucursal.value);
   almacenes.value = data;
@@ -330,17 +357,81 @@ const funListarClienteProveedor = async () => {
 }
 
 function addCarrito(prod: any) {
+  const stockDisponible = getStock(prod);
   let posicion = carrito.value.findIndex((p) => {
     return p.id === prod.id;
   });
   if (posicion >= 0) {
-    carrito.value[posicion].cantidad++;
+    if(carrito.value[posicion].cantidad < stockDisponible){
+      carrito.value[posicion].cantidad++;
+    }else{
+      alert("No hay suficiente stock disponible");
+    }
   } else {
-    carrito.value.push({ ...prod, cantidad: 1 });
+    if(stockDisponible>0){
+      carrito.value.push({ ...prod, cantidad: 1 });
+
+    }else{
+      alert("Producto agotado");
+    }
   }
 }
 
-function guardarClienteProveedor() {}
+async function generarVenta() {
+  try {
+    const hoy = new Date();
+    const fecha_hora_actual = hoy.toISOString().slice(0,19).replace("T", " ");
+
+    if(!cliente_selected.value.id || carrito.value.length === 0){
+      alert("Faltan datos");
+      return;
+    }
+
+    const movimientos = carrito.value.map((prod) => ({
+      producto_id: prod.id,
+      almacen_id: selectedAlmacen.value,
+      cantidad: parseInt(prod.cantidad),
+      tipo_movimiento: "salida",
+      precio_unitario_compra: 0,
+      precio_unitario_venta: prod.precio_venta,
+      observaciones: "NINUNO"
+      
+    }));
+
+    const datos = {
+      fecha: fecha_hora_actual,
+      tipo_nota: "venta",
+      cliente_id: cliente_selected.value.id,
+      estado_nota: "NINGUNO",
+      observaciones: "NINGUNO",
+      movimientos,
+      
+    }
+
+    await notaService.guardar(datos);
+
+    carrito.value = [];
+    cliente_selected.value = {};
+    selectedAlmacen.value = -1;
+
+    funListaProductos()
+  } catch (error) {
+    console.log(error);
+  }
+  
+}
+
+async function guardarClienteProveedor() {
+  try {
+    const {data} = await clienteProveedorService.guardar(formCliente.value);
+    cliente_selected.value = data.data;
+
+    formCliente.value = {}
+    visibleDialogCliente.value = false;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const seleccionarCliente = (clie: any) => {
   cliente_selected.value = clie;
@@ -351,4 +442,8 @@ const totalCarrito = computed(() => {
     return acc + item.precio_venta * item.cantidad;
   }, 0);
 });
+
+function quitarCarrito(id: number){
+  carrito.value = carrito.value.filter((p) => p.id !== id);
+}
 </script>

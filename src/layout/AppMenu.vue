@@ -71,7 +71,7 @@ const model = ref([
             {
                 label: 'Lista de Compras y Ventas',
                 icon: 'pi pi-fw pi-circle',
-                to: '/admin/sucursal'
+                to: '/admin/notas'
             }
         ]
     },
